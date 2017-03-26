@@ -1,0 +1,36 @@
+---
+title: "Tooth Growth Analysis"
+author: "Mark Culp"
+date: "March 22, 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview:
+
+```{r}
+
+library(datasets)
+data("ToothGrowth")
+
+```
+
+
+## Exploratory analysis
+
+## Data summary 
+
+## Comparison of tooth growth by supp and dose
+
+## Conclusions and assumptions
+
+
+
+
+
+
+
+
