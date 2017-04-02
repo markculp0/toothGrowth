@@ -51,12 +51,98 @@ table(ToothGrowth$dose)
 
 ## Data summary 
 
+```{r}
+
+# Summarize columns 
+summary(ToothGrowth)
+
+
+# Let's look at our 30 guinea pigs given orange
+# juice and ascorbic acid
+oj <- ToothGrowth[ToothGrowth$supp == "OJ",]
+vc <- ToothGrowth[ToothGrowth$supp == "VC",]
+
+# A histogram of tooth odontoblast length
+# appears to have a positive slope possibly 
+# due to increasing dosages of orange juice. 
+hist(oj$len)
+
+# The histogram of the tooth growth for guinea
+# pigs given ascorbic acid looks almost normal.
+hist(vc$len)
+
+```
+
 ## Comparison of tooth growth by supp and dose
+
+```{r}
+# So lets compare tooth growth by supplement by 
+# dosage levels
+
+# Given an 0.5 milligram/day dosage, we have
+# 10 samples of guinea pigs given orange juice
+# and 10 samples of guinea pigs given ascorbic acid
+oj05 <- ToothGrowth[ToothGrowth$dose == 0.5 & ToothGrowth$supp == "OJ",]
+vc05 <- ToothGrowth[ToothGrowth$dose == 0.5 & ToothGrowth$supp == "VC",]
+dim(oj05)
+dim(vc05)
+
+# Our means and standard error for the orange
+# juice samples at the 0.5 mg/day level are:
+mean(oj05$len)
+sd(oj05$len)
+
+# So we conduct a t-test on the orange 
+# juice sample at the 0.5 mg/day dosage level.
+# This shows we can reject the null hypothesis
+# that the orange juice had no impact on the 
+# guinea pigs' tooth growth.
+t.test(oj05$len)
+
+# Our means and standard error for the ascorbic
+# acid samples at the 0.5 mg/day level are:
+mean(vc05$len)
+sd(vc05$len)
+
+# So we conduct a t-test on the ascorbic 
+# acid sample at the 0.5 mg/day dosage level.
+# This shows we can reject the null hypothesis
+# that the ascorbic acid had no impact on the 
+# guinea pigs' tooth growth.
+t.test(vc05$len)
+
+# --------------------------------
+
+# We now compare the guinea pigs' tooth growth 
+# under both supplements: 
+# ----------------------
+# At the 0.5 mg/daydosage level
+tg05 <- ToothGrowth[ToothGrowth$dose == 0.5,] 
+t.test(len ~ supp, paired = F, var.equal = F, data = tg05)
+
+# At the 1.0 mg/daydosage level
+tg10 <- ToothGrowth[ToothGrowth$dose == 1.0,] 
+t.test(len ~ supp, paired = F, var.equal = F, data = tg10)
+
+# At the 2.0 mg/daydosage level
+tg20 <- ToothGrowth[ToothGrowth$dose == 2.0,] 
+t.test(len ~ supp, paired = F, var.equal = F, data = tg20)
+
+
+
+
+# The power of the orange juice samples at the
+# 0.5 mg/day level are:
+# power.t.test(n=10,delta = 13.23,sd= 4.459709, type="one.sample", alt = "one.sided")$power
+
+```
 
 ## Conclusions and assumptions
 
+```{r}
 
 
+```
 
 
 
