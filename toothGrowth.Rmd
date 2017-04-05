@@ -25,7 +25,12 @@ odontoblasts (cells responsible for tooth growth).
 library(datasets)
 data("ToothGrowth")
 
+# No scientific notation
+options(scipen = 999)
+
 ```
+
+First we conduct an exploratory analysis of the "ToothGrowth" dataset.  We need to understand the state of our data.  
 
 ## Exploratory analysis
 
@@ -44,53 +49,102 @@ range(ToothGrowth$len)
 table(ToothGrowth$supp)
 
 # Levels and counts of dosages
-table(ToothGrowth$dose)
+table(ToothGrowth$dose, ToothGrowth$supp)
 
 
 ```
+
+So this appears to be a very tidy data set: 30 guinea pigs were give orange juice and 30 were given ascorbic acid.  10 from each set of guinea pigs were given 0.5, 1.0, or 2.0 milligrams/day of one of the two supplements.
 
 ## Data summary 
 
+So lets take a look at the characteristics of the data related to the 30 guinea pigs given orange juice.  
+
 ```{r}
 
-# Summarize columns 
-summary(ToothGrowth)
 
-
-# Let's look at our 30 guinea pigs given orange
-# juice and ascorbic acid
+# Subset the guinea pigs given orange juice, 
+# overall and by dosages
 oj <- ToothGrowth[ToothGrowth$supp == "OJ",]
-vc <- ToothGrowth[ToothGrowth$supp == "VC",]
+oj05 <- oj[oj$dose == 0.5,]
+oj10 <- oj[oj$dose == 1.0,]
+oj20 <- oj[oj$dose == 2.0,]
 
-# A histogram of tooth odontoblast length
-# appears to have a positive slope possibly 
-# due to increasing dosages of orange juice. 
-hist(oj$len)
+# Plot tooth odontoblast length in relation
+# to increasing dosages of orange juice. 
+boxplot(len ~ dose, data = oj,
+        boxwex = 0.25, at = 1:3 - 0.2,
+        col = "yellow",
+        main = "Guinea Pigs' Tooth Growth",
+        xlab = "Orange juice dosage in milligrams",
+        ylab = "tooth length",
+        xlim = c(0.5, 3.5), ylim = c(0, 35), yaxs = "i")
 
-# The histogram of the tooth growth for guinea
-# pigs given ascorbic acid looks almost normal.
-hist(vc$len)
+
+
 
 ```
+
+The histogram of tooth odontoblast length for the guinea pigs given orange juice appears to have a positive slope, possibly due to increasing dosages.
+
+Now we look at the characteristics of the data related to the 30 guinea pigs given ascorbic acid.  
+
+```{r}
+
+# Subset the guinea pigs given ascorbic acid,
+# overall and by dosages
+vc <- ToothGrowth[ToothGrowth$supp == "VC",]
+vc05 <- vc[vc$dose == 0.5,]
+vc10 <- vc[vc$dose == 1.0,]
+vc20 <- vc[vc$dose == 2.0,]
+
+# Plot tooth odontoblast length in relation
+# to increasing dosages of ascorbic acid. 
+boxplot(len ~ dose, data = vc,
+        boxwex = 0.25, at = 1:3 - 0.2,
+        col = "yellow",
+        main = "Guinea Pigs' Tooth Growth",
+        xlab = "Ascorbic Acid dosage in milligrams",
+        ylab = "tooth length",
+        xlim = c(0.5, 3.5), ylim = c(0, 35), yaxs = "i")
+
+```
+So now we compare tooth growth by supplement and dosage levels.
 
 ## Comparison of tooth growth by supp and dose
 
 ```{r}
-# So lets compare tooth growth by supplement by 
-# dosage levels
+# Load libraries
+library(knitr)
 
-# Given an 0.5 milligram/day dosage, we have
-# 10 samples of guinea pigs given orange juice
-# and 10 samples of guinea pigs given ascorbic acid
-oj05 <- ToothGrowth[ToothGrowth$dose == 0.5 & ToothGrowth$supp == "OJ",]
-vc05 <- ToothGrowth[ToothGrowth$dose == 0.5 & ToothGrowth$supp == "VC",]
-dim(oj05)
-dim(vc05)
+# Means and standard deviation for the orange
+# juice at the three dosage levels
+mnsOJ <- rbind(
+   c("0.5",mean(oj05$len),round(sd(oj05$len),3),round(var(oj05$len),3)),
+   c("1.0",mean(oj10$len),round(sd(oj10$len),3),round(var(oj10$len),3)),
+   c("2.0",mean(oj20$len),round(sd(oj20$len),3),round(var(oj20$len),3))
+)
 
-# Our means and standard error for the orange
-# juice samples at the 0.5 mg/day level are:
-mean(oj05$len)
-sd(oj05$len)
+# Means and standard error for the ascorbic
+# acid samples 
+mnsVC <- rbind(
+  c("0.5",mean(vc05$len),round(sd(vc05$len),3),round(var(vc05$len),3)),
+  c("1.0",mean(vc10$len),round(sd(vc10$len),3),round(var(vc10$len),3)),
+  c("2.0",mean(vc20$len),round(sd(vc20$len),3),round(var(vc20$len),3))
+)
+
+# Display tables of calculated means, sd, variance
+kable(mnsOJ, caption = "Orange Juice Means and Variance", col.names = c("Dossage","Mean","Std Dev","Variance"), align = 'c')
+
+kable(mnsVC, caption = "Ascorbic Acid Means and Variance", col.names = c("Dossage","Mean","Std Dev","Variance"), align = 'c')
+
+```
+
+Tooth growth appears to increase with dosage levels under both supplements but the difference between the two supplements is much more significant at the 0.5 and 1.0 mg/day levels than it is at the 2.0 mg/day level.  One concern here would be the increase in the variance of the ascorbic acid sample at the 2.0 dossage level.  One would expect it to decrease with an increased dossage level as the orange juice sample did.
+
+## Conclusions and assumptions
+
+```{r}
 
 # So we conduct a t-test on the orange 
 # juice sample at the 0.5 mg/day dosage level.
@@ -98,11 +152,6 @@ sd(oj05$len)
 # that the orange juice had no impact on the 
 # guinea pigs' tooth growth.
 t.test(oj05$len)
-
-# Our means and standard error for the ascorbic
-# acid samples at the 0.5 mg/day level are:
-mean(vc05$len)
-sd(vc05$len)
 
 # So we conduct a t-test on the ascorbic 
 # acid sample at the 0.5 mg/day dosage level.
@@ -129,20 +178,12 @@ tg20 <- ToothGrowth[ToothGrowth$dose == 2.0,]
 t.test(len ~ supp, paired = F, var.equal = F, data = tg20)
 
 
-
-
 # The power of the orange juice samples at the
 # 0.5 mg/day level are:
 # power.t.test(n=10,delta = 13.23,sd= 4.459709, type="one.sample", alt = "one.sided")$power
 
 ```
 
-## Conclusions and assumptions
-
-```{r}
-
-
-```
 
 
 
