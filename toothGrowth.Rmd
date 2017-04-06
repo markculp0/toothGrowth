@@ -85,7 +85,7 @@ boxplot(len ~ dose, data = oj,
 
 ```
 
-The histogram of tooth odontoblast length for the guinea pigs given orange juice appears to have a positive slope, possibly due to increasing dosages.
+The tooth odontoblast length for the guinea pigs given orange juice appears to increase as dosages increase.
 
 Now we look at the characteristics of the data related to the 30 guinea pigs given ascorbic acid.  
 
@@ -109,6 +109,8 @@ boxplot(len ~ dose, data = vc,
         xlim = c(0.5, 3.5), ylim = c(0, 35), yaxs = "i")
 
 ```
+The tooth odontoblast length for the guinea pigs given ascorbi acid also increases as the dosages increase.
+
 So now we compare tooth growth by supplement and dosage levels.
 
 ## Comparison of tooth growth by supp and dose
@@ -140,49 +142,38 @@ kable(mnsVC, caption = "Ascorbic Acid Means and Variance", col.names = c("Dossag
 
 ```
 
-Tooth growth appears to increase with dosage levels under both supplements but the difference between the two supplements is much more significant at the 0.5 and 1.0 mg/day levels than it is at the 2.0 mg/day level.  One concern here would be the increase in the variance of the ascorbic acid sample at the 2.0 dossage level.  One would expect it to decrease with an increased dossage level as the orange juice sample did.
+Tooth growth appears to increase with dosage levels under both supplements but the difference between the two supplements is much more significant at the 0.5 and 1.0 mg/day levels than it is at the 2.0 mg/day level.  One concern here would be the increase in the variance of the ascorbic acid sample at the 2.0 dosage level.  One would expect it to decrease with an increased dosage level as the orange juice sample did.
 
 ## Conclusions and assumptions
 
+Lets now compare the guinea pigs' tooth growth under both supplements, and conduct t-test 
+
+
 ```{r}
 
-# So we conduct a t-test on the orange 
-# juice sample at the 0.5 mg/day dosage level.
-# This shows we can reject the null hypothesis
-# that the orange juice had no impact on the 
-# guinea pigs' tooth growth.
-t.test(oj05$len)
-
-# So we conduct a t-test on the ascorbic 
-# acid sample at the 0.5 mg/day dosage level.
-# This shows we can reject the null hypothesis
-# that the ascorbic acid had no impact on the 
-# guinea pigs' tooth growth.
-t.test(vc05$len)
-
-# --------------------------------
-
-# We now compare the guinea pigs' tooth growth 
-# under both supplements: 
-# ----------------------
-# At the 0.5 mg/daydosage level
+# Subset the data by dosage level
 tg05 <- ToothGrowth[ToothGrowth$dose == 0.5,] 
+tg10 <- ToothGrowth[ToothGrowth$dose == 1.0,] 
+tg20 <- ToothGrowth[ToothGrowth$dose == 2.0,] 
+
+# At the 1.0 mg/daydosage level
 t.test(len ~ supp, paired = F, var.equal = F, data = tg05)
 
 # At the 1.0 mg/daydosage level
-tg10 <- ToothGrowth[ToothGrowth$dose == 1.0,] 
 t.test(len ~ supp, paired = F, var.equal = F, data = tg10)
 
 # At the 2.0 mg/daydosage level
-tg20 <- ToothGrowth[ToothGrowth$dose == 2.0,] 
 t.test(len ~ supp, paired = F, var.equal = F, data = tg20)
 
-
-# The power of the orange juice samples at the
-# 0.5 mg/day level are:
-# power.t.test(n=10,delta = 13.23,sd= 4.459709, type="one.sample", alt = "one.sided")$power
-
 ```
+
+
+The first two t-tests clearly reject the null hypotheses that the difference in the mean tooth growth for the guinea pigs given orange juice and the ones given ascorbic acid is non-zero.  This is evident by the clearly higher means for the groups given orange juice at the 0.5 and 1.0 mg/day dosage levels.  Neither of the confidence intervals for these two t-tests contain zero.
+
+Although the two-sample test result at the 2.0 dosage level seems to reject this same null hypthesis, the exceptionally high p-value given for this test calls the finding into question.  The strength of the evidence to support rejecting the null hypothesis is very low here.  
+
+The confidence interval for this test is clearly centered at or near zero, and the mean values for the tooth growth at the 2.0 dosage level is actually higher for the guinea pigs given ascorbic acid.  The high variance in this sample warrants further testing.  
+
 
 
 

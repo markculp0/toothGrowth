@@ -117,12 +117,16 @@ mnsVC
 
 # ---------------------------------------------
 
+t.test(oj05$len)$p.value
+
+
+
 # So we conduct a t-test on the orange 
 # juice sample at the 0.5 mg/day dosage level.
 # This shows we can reject the null hypothesis
 # that the orange juice had no impact on the 
 # guinea pigs' tooth growth.
-t.test(oj05$len)[4]
+t.test(oj05$len)[c(1:3)]
 # t = 9.3811, df = 9, p-value = 0.000006074
 # alternative hypothesis: true mean is not equal to 0
 # 95 percent confidence interval:
