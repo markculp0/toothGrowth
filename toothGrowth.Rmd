@@ -172,7 +172,7 @@ The first two t-tests clearly reject the null hypotheses that the difference in 
 
 Although the two-sample test result at the 2.0 dosage level seems to reject this same null hypthesis, the exceptionally high p-value given for this test calls the finding into question.  The strength of the evidence to support rejecting the null hypothesis is very low here.  
 
-The confidence interval for this test is clearly centered at or near zero, and the mean values for the tooth growth at the 2.0 dosage level is actually higher for the guinea pigs given ascorbic acid.  The high variance in this sample warrants further testing.  
+The confidence interval for this test is clearly centered at or near zero, and the mean values for the tooth growth at the 2.0 dosage level is actually higher for the guinea pigs given ascorbic acid.  This high variance coupled with the high p-value in the 2.0 dosage level t-test may signal the need for further testing.  
 
 
 
